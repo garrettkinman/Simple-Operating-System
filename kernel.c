@@ -22,10 +22,32 @@ ReadyQueueNode* head = NULL;
 ReadyQueueNode* tail = NULL;
 int sizeOfQueue = 0;
 
+void boot();
+int kernel();
+
 int main(int argc, char const *argv[])
 {
-    shellUI();
+    int error = 0;
+    boot();
+    error = kernel();
+    return error;
 }
+
+/*
+Initializes and acquires resources needed for the OS to run
+*/
+void boot() {
+    // TODO
+}
+
+/*
+Calls the shell
+*/
+int kernel() {
+    int error = shellUI();
+    return error;
+}
+
 /*
 Adds a pcb to the tail of the linked list
 */
