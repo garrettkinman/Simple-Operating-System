@@ -38,6 +38,13 @@ Initializes and acquires resources needed for the OS to run
 */
 void boot() {
     // TODO
+    // 1) initialize every element of RAM to NULL
+    // 2) delete old BackingStore directory
+    // 3) create new BackingStore directory
+    for (int i = 0; i < size(ram) / size(ram[0]); i++) {
+        ram[i] = NULL;
+    }
+    
 }
 
 /*
