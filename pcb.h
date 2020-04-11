@@ -5,6 +5,7 @@ start: Points to first line of that program
 end: Points to last line of that program
 
 ~~~NEW STUFF~~~
+PID: process ID
 pageTable: index is the page number; values stored in each cell are the frame numbers
 PC_page: which page the process is currently on
 PC_offset: which line within the page the process is currently on
@@ -12,6 +13,7 @@ pages_max: total number of pages within this process
 */
 typedef struct PCB
 {
+    int PID;
     int PC;
     int start;
     int end;
