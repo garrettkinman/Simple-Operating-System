@@ -31,3 +31,9 @@ start = start
 end = end
 */
 PCB* makePCB(int start, int end);
+
+/*
+Function to allow memory manager to access the current PID of the most recently made PCB
+so it can name the backing store file appropriately
+*/
+int getCurrentPID();

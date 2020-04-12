@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int PID = 0;
-
 /*
 PCB has 3 fields
 PC : Points to the the current line reached for that program
@@ -28,6 +26,7 @@ typedef struct PCB
     int pages_max;
 }PCB;
 
+int PID = 0;
 
 /*
 Passes 2 parameters (start , end)
@@ -44,7 +43,17 @@ PCB* makePCB(int start, int end){
     pcb->end = end;
 
     PID++;
+
+    // TODO: rest of fields
     return pcb;
+}
+
+/*
+Function to allow memory manager to access the current PID of the most recently made PCB
+so it can name the backing store file appropriately
+*/
+int getCurrentPID() {
+    return PID;
 }
 
 
