@@ -1,6 +1,8 @@
 #include <stdio.h>
+#include <string.h>
 #include "pcb.h"
 #include "kernel.h"
+#include "ram.h"
 
 /*
 Copies file to backing store and loads first two pages of program into 
@@ -100,7 +102,29 @@ int countTotalPages(FILE *f) {
 Loads the 4 lines of code from the page into the frame
 */
 void loadPage(int pageNumber, FILE *f, int frameNumber) {
-    // TODO
+    // lineNumber is the first line in the page we want to load into ram
+    // ramPosition is the first index in ram of the frame we want loaded into
+    int lineNumber = pageNumber * 4;
+    int ramPosition = frameNumber * 4;
+    int i = 0;
+    
+    // copy the 4 lines of code we want to the correct positions in ram
+    char line[1000];
+    while (fgets(line, sizeof(line), f)) {
+        if (i == lineNumber) {
+            ram[ramPosition] = strdup(line);
+        } else if (i == lineNumber + 1) {
+            ram[ramPosition + 1] = strdup(line);
+        } else if (i == lineNumber + 2) {
+            ram[ramPosition + 2] = strdup(line);
+        } else if (i == lineNumber + 3) {
+            ram[ramPosition + 3] = strdup(line);
+        } else if (i > lineNumber + 3) {
+            break;
+        }
+    }
+
+    return;
 }
 
 /*
