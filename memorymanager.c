@@ -133,7 +133,14 @@ Returns index of the frame
 Returns -1 if all frames are taken
 */
 int findFrame() {
-    // TODO
+    // check the first slot of each frame
+    for (int i = 0; i < sizeof(ram) / sizeof(ram[0]); i += 4) {
+        if (ram[i] == NULL) {
+            return i;
+        }
+    }
+
+    return -1;
 }
 
 /*
