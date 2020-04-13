@@ -7,15 +7,6 @@ Copies file to backing store and loads first two pages of program into
 Creates PCB and adds it to the ready queue
 */
 int launcher(FILE *p) {
-    // TODO
-    // 1) Copy the entire file into the backing store. (set filename as the PID)
-    // 2) Close the file pointer pointing to the original file.
-    // 3) Open the file in the backing store.
-    // 4) Our launch paging technique defaults to loading two pages of the program into RAM
-        // when it is first launched. A page is 4 lines of code.
-        // If the program has 4 or fewer lines of code, then only one page is loaded.
-        // If the program has more than 8 lines of code, then only the first two pages are loaded.
-        // To do this, use the below helper functions.
 
     // creates a text file with name of format PCB#.txt where # is the PID of the PCB for program
     int PID = getCurrentPID();
@@ -75,6 +66,10 @@ int launcher(FILE *p) {
         }
     }
     
+    fclose(copy);
+
+    // TODO: error codes
+    return 0;
 }
 
 /*
