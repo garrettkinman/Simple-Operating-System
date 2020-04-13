@@ -164,4 +164,19 @@ When load page to or unload page from ram, need to update the page table of the 
 */
 int updatePageTable(PCB *p, int pageNumber, int frameNumber, int victimFrame) {
     // TODO
+    p->pageTable[pageNumber] = frameNumber;
+    if (victimFrame == NULL) {
+        return 0;
+    }
+    PCB *victim = findByFrameNumber(victimFrame);
+    if (victim != NULL) {
+        for (int i = 0; i < victim->pages_max; i++) {
+            if (victim->pageTable[i] == victimFrame) {
+                victim->pageTable[i] == NULL;
+            }
+        }
+        return 0;
+    }
+    // TODO: error code
+    return -20;
 }

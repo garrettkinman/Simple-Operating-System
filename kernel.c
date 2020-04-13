@@ -178,3 +178,20 @@ void emptyReadyQueue(){
     }
     sizeOfQueue =0;
 }
+
+/*
+Returns the PCB with a page in a given frame number, if such a PCB exists
+*/
+PCB* findByFrameNumber(int frameNumber) {
+    ReadyQueueNode *node = head;
+    while (node->next != NULL) {
+        for (int i = 0; i < node->PCB->pages_max; i++) {
+            if (node->PCB->pageTable[i] == frameNumber) {
+                return node->PCB;
+            }
+        }
+        node = node->next;
+    }
+
+    return NULL;
+}
