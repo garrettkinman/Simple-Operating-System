@@ -30,7 +30,7 @@ PC = start
 start = start
 end = end
 */
-PCB* makePCB(int start, int end);
+PCB* makePCB(int numPages);
 
 /*
 Function to allow memory manager to access the current PID of the most recently made PCB

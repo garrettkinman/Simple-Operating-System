@@ -2,28 +2,22 @@
 #include <stdlib.h>
 
 /*
-PCB has 3 fields
-PC : Points to the the current line reached for that program
-start: Points to first line of that program
-end: Points to last line of that program
-
-~~~NEW STUFF~~~
+PCB has 6 fields
 PID: process ID
-pageTable: index is the page number; values stored in each cell are the frame numbers
+PC : Points to the the current line reached for that program
 PC_page: which page the process is currently on
 PC_offset: which line within the page the process is currently on
 pages_max: total number of pages within this process
+pageTable: index is the page number; values stored in each cell are the frame numbers
 */
 typedef struct PCB
 {
     int PID;
     int PC;
-    int start;
-    int end;
-    int pageTable[10];
     int PC_page;
     int PC_offset;
     int pages_max;
+    int pageTable[10];
 }PCB;
 
 int PID = 0;
@@ -35,16 +29,16 @@ PC = start
 start = start
 end = end
 */
-PCB* makePCB(int start, int end){
+PCB* makePCB(int numPages){
     PCB* pcb = (PCB*)malloc(sizeof(PCB));
     pcb->PID = PID;
-    pcb->PC = start;
-    pcb->start = start;
-    pcb->end = end;
+    pcb->PC = 0;
+    pcb->PC_page = 0;
+    pcb->PC_offset = 0;
+    pcb->pages_max = numPages;
 
     PID++;
 
-    // TODO: rest of fields
     return pcb;
 }
 

@@ -5,6 +5,7 @@
 #include"ram.h"
 #include"cpu.h"
 #include"interpreter.h"
+#include"memorymanager.h"
 
 /*
 This is a node in the Ready Queue implemented as 
@@ -120,13 +121,14 @@ int myinit(char* filename){
     // Then add it to the ReadyQueue
     FILE * fp = fopen(filename,"r");
     if (fp == NULL) return -3;
-    int start;
-    int end;
-    addToRAM(fp,&start,&end);
+
+    //int start;
+    //int end;
+    // addToRAM(fp,&start,&end);
     fclose(fp);
-    if (start == -1) return -5;
-    PCB* pcb = makePCB(start,end);
-    addToReady(pcb);
+    //if (start == -1) return -5;
+    //PCB* pcb = makePCB(start,end);
+    //addToReady(pcb);
     return 0;
 }
 

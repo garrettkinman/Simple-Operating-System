@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include "pcb.h"
+#include "kernel.h"
 
 /*
-
+Copies file to backing store and loads first two pages of program into 
+Creates PCB and adds it to the ready queue
 */
 int launcher(FILE *p) {
     // TODO
@@ -33,14 +35,45 @@ int launcher(FILE *p) {
     }
 
     int numPages = countTotalPages(copy);
-    if (numPages <= 1) {
-        // load the page into ram
-    } else if (numPages <= 2) {
-        // load both pages into ram
+    PCB *pcb = makePCB(numPages);
+    int frameNumber;
+    int isVictimless;
+
+    // if this program requires 2 or fewer pages (i.e., 8 or fewer lines of code)
+    // load all pages into ram
+    // else, load just the first two into ram
+    // then update PCB page tables as necessary
+    if (numPages <= 2) {
+        for (int i = 0; i < numPages; i++) {
+            isVictimless = 1;
+            frameNumber = findFrame();
+            if (frameNumber < 0) {
+                isVictimless = 0;
+                frameNumber = findVictim(pcb);
+            }
+            loadPage(i, copy, frameNumber);
+            if(isVictimless) {
+                updatePageTable(pcb, i, frameNumber, NULL);
+            } else {
+                updatePageTable(pcb, i, frameNumber, frameNumber);
+            }
+        }
     } else {
-        // load first two pages into ram
+        for (int i = 0; i < 2; i++) {
+            isVictimless = 1;
+            frameNumber = findFrame();
+            if (frameNumber < 0) {
+                isVictimless = 0;
+                frameNumber = findVictim(pcb);
+            }
+            loadPage(i, copy, frameNumber);
+            if(isVictimless) {
+                updatePageTable(pcb, i, frameNumber, NULL);
+            } else {
+                updatePageTable(pcb, i, frameNumber, frameNumber);
+            }
+        }
     }
-    
     
 }
 
@@ -69,28 +102,32 @@ int countTotalPages(FILE *f) {
 }
 
 /*
-
+Loads the 4 lines of code from the page into the frame
 */
 void loadPage(int pageNumber, FILE *f, int frameNumber) {
     // TODO
 }
 
 /*
-Uses FIFO algorithm to search ram for a 
+Searches for an empty frame
+Returns index of the frame
+Returns -1 if all frames are taken
 */
 int findFrame() {
     // TODO
 }
 
 /*
-
+Picks a random frame number
+If that frame does not belong to the active PCB (i.e., it is not in its page table), return it
+Else, increment (modulo-wise) until find one that works
 */
 int findVictim(PCB *p) {
     // TODO
 }
 
 /*
-
+When load page to or unload page from ram, need to update the page table of the PCB to reflect that
 */
 int updatePageTable(PCB *p, int pageNumber, int frameNumber, int victimFrame) {
     // TODO
