@@ -149,7 +149,14 @@ If that frame does not belong to the active PCB (i.e., it is not in its page tab
 Else, increment (modulo-wise) until find one that works
 */
 int findVictim(PCB *p) {
-    // TODO
+    int random = rand() % 10;
+    for (int i = 0; i < sizeof(p->pages_max); i++) {
+        if (p->pageTable[i] == random) {
+            random = random++ % 10;
+            i = 0;
+        }
+    }
+    return random;
 }
 
 /*
