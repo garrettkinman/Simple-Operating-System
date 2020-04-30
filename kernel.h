@@ -35,4 +35,4 @@ Flushes every pcb off the ready queue in the case of a load error
 */
 void emptyReadyQueue();
 
-PCB* findByFrameNumber(int frameNumber)
+PCB* findByFrameNumber(int frameNumber);

@@ -8,7 +8,8 @@
 struct CPU { 
     int IP; 
     char IR[1000]; 
-    int quanta; 
+    int quanta;
+    int offset;
 } CPU;
 
 /*
@@ -26,7 +27,7 @@ int run(int quanta){
 
     for (int i = 0; i < quanta; i++)
     {
-        strcpy(CPU.IR,ram[CPU.IP]);
+        strcpy(CPU.IR,ram[CPU.IP + CPU.offset]);
         int errorCode = parse(CPU.IR);
         // Do error checking and if error, return error
         if (errorCode != 0){

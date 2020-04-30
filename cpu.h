@@ -3,7 +3,8 @@
 struct CPU { 
     int IP; 
     char IR[1000]; 
-    int quanta; 
+    int quanta;
+    int offset;
 } CPU;
 
 int run(int);

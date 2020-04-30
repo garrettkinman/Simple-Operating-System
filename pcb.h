@@ -1,26 +1,23 @@
-/*
-PCB has 3 fields
-PC : Points to the the current line reached for that program
-start: Points to first line of that program
-end: Points to last line of that program
+#ifndef PCB_H
+#define PCB_H
 
-~~~NEW STUFF~~~
+/*
+PCB has 6 fields
 PID: process ID
-pageTable: index is the page number; values stored in each cell are the frame numbers
+PC : Points to the the current line reached for that program
 PC_page: which page the process is currently on
 PC_offset: which line within the page the process is currently on
 pages_max: total number of pages within this process
+pageTable: index is the page number; values stored in each cell are the frame numbers
 */
 typedef struct PCB
 {
     int PID;
     int PC;
-    int start;
-    int end;
-    int pageTable[10];
     int PC_page;
     int PC_offset;
     int pages_max;
+    int pageTable[10];
 }PCB;
 
 /*
@@ -37,3 +34,5 @@ Function to allow memory manager to access the current PID of the most recently 
 so it can name the backing store file appropriately
 */
 int getCurrentPID();
+
+#endif

@@ -1,11 +1,18 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include "pcb.h"
 #include "kernel.h"
 #include "ram.h"
 
+int countTotalPages(FILE *f);
+void loadPage(int pageNumber, FILE *f, int frameNumber);
+int findFrame();
+int findVictim(PCB *p);
+int updatePageTable(PCB *p, int pageNumber, int frameNumber, int victimFrame);
+
 /*
-Copies file to backing store and loads first two pages of program into 
+Copies file to backing store and loads first two pages of program into RAM
 Creates PCB and adds it to the ready queue
 */
 int launcher(FILE *p) {
@@ -46,7 +53,7 @@ int launcher(FILE *p) {
             }
             loadPage(i, copy, frameNumber);
             if(isVictimless) {
-                updatePageTable(pcb, i, frameNumber, NULL);
+                updatePageTable(pcb, i, frameNumber, -1);
             } else {
                 updatePageTable(pcb, i, frameNumber, frameNumber);
             }
@@ -61,7 +68,7 @@ int launcher(FILE *p) {
             }
             loadPage(i, copy, frameNumber);
             if(isVictimless) {
-                updatePageTable(pcb, i, frameNumber, NULL);
+                updatePageTable(pcb, i, frameNumber, -1);
             } else {
                 updatePageTable(pcb, i, frameNumber, frameNumber);
             }
@@ -165,14 +172,14 @@ When load page to or unload page from ram, need to update the page table of the 
 int updatePageTable(PCB *p, int pageNumber, int frameNumber, int victimFrame) {
     // TODO
     p->pageTable[pageNumber] = frameNumber;
-    if (victimFrame == NULL) {
+    if (victimFrame == -1) {
         return 0;
     }
     PCB *victim = findByFrameNumber(victimFrame);
     if (victim != NULL) {
         for (int i = 0; i < victim->pages_max; i++) {
             if (victim->pageTable[i] == victimFrame) {
-                victim->pageTable[i] == NULL;
+                victim->pageTable[i] == -1;
             }
         }
         return 0;

@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
+#include<string.h>
 #include"shell.h"
 #include"pcb.h"
 #include"ram.h"
@@ -43,13 +44,13 @@ void boot() {
     }
 
     char command[50];
-    strcpy(command, "rmdir -r BackingStore");
+    strcpy(command, "rm BackingStore/*");
     system(command);
 
     strcpy(command, "mkdir BackingStore");
     system(command);
 
-    free(command);
+    //free(command);
 }
 
 /*
@@ -140,30 +141,63 @@ int scheduler(){
         //pop head of queue
         PCB* pcb = pop();
         //copy PC of PCB to IP of CPU
-        CPU.IP = pcb->PC;
+        //CPU.IP = pcb->PC;
+
+        // page fault
+        if (pcb->PC_offset == 0 && pcb->pageTable[pcb->PC_page] < -1) {
+            int PID = pcb->PID;
+            char filename[15];
+            sprintf(filename, "PCB%d.txt", PID);
+            FILE *page = fopen(filename, "r");
+
+            int isVictimless = TRUE;
+            int frameNumber = findFrame();
+            if (frameNumber < 0) {
+                isVictimless = FALSE;
+                frameNumber = findVictim(pcb);
+            }
+            loadPage(pcb->PC_page, page, frameNumber);
+            if(isVictimless) {
+                updatePageTable(pcb, pcb->PC_page, frameNumber, -1);
+            } else {
+                updatePageTable(pcb, pcb->PC_page, frameNumber, frameNumber);
+            }
+        }
+
+        CPU.IP = pcb->pageTable[pcb->PC_page];
+        CPU.offset = pcb->PC_offset;
 
         int isOver = FALSE;
-        int remaining = (pcb->end) - (pcb->PC) + 1;
+        int remaining = ((pcb->pages_max) * 4) - (pcb->PC);
         int quanta = DEFAULT_QUANTA;
 
+        
         if (DEFAULT_QUANTA >= remaining) {
             isOver = TRUE;
             quanta = remaining;
         }
+        
+
 
         int errorCode = run(quanta);
 
         if ( errorCode!=0 || isOver ){
-            removeFromRam(pcb->start,pcb->end);
+            //removeFromRam(pcb->start,pcb->end);
             free(pcb);
         } else {
             pcb->PC += DEFAULT_QUANTA;
+            if (pcb->PC_offset + 2 == 4) {
+                pcb->PC_page++;
+                pcb->PC_offset = 0;
+            }
             addToReady(pcb);
         }
     }
     // reset RAM
     resetRAM();
     return 0;
+
+
 }
 
 /*
